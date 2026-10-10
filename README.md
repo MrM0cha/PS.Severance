@@ -315,7 +315,9 @@ Load different module versions simultaneously without affecting your global Powe
 ### Multi-Tenant Administration
  
 Reduce the risk of running commands against the wrong tenant by giving every environment a unique workspace and console identity.
- 
+
+<img width="85" height="85" alt="PSSLogoSmall" src="https://github.com/user-attachments/assets/b7b8d62b-56ca-474d-b896-636dc22f98c0" />
+
 ---
  
 # About the Project
