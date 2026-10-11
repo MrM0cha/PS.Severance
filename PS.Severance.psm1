@@ -1,16 +1,10 @@
 <#
 .SYNOPSIS
-PSSeverance is a custom module for handling multiple PowerShell environments and their configurations.
+PS.Severance is a PowerShell module that enables the creation of completely isolated PowerShell environments.
 
 .DESCRIPTION
 This module contains several functions that facilitate the management and configuration of multiple PowerShell environments.
-It severes the management and configuration between different PowerShell environments, e.g. Console name and color, Environmental variables, command history, and module versions
-
-.NOTES
-
-Author:         Teemu "Mokka" Kettunen
-Creation Date:  18.09.2026
-Last Update:    18.09.2026
+It severes the management and configuration between different PowerShell environments, e.g. Console name and color, Environmental variables, command history, and module versions.
 
 #>
 $ErrorActionPreference = "Stop"
@@ -45,9 +39,9 @@ Catch {
 $CmdletAliasMatrix = @{
     "UPSSEV" = "Update-PSSEnvVariables"
     "GPSSEV" = "Get-PSSEnvVariables"
-    "PssCon"    = "New-PSSConsole"
+    "PSSCon"    = "New-PSSConsole"
     "NPSSEV" = "New-PSSEnvVariables"
-    "PssVsc"   = "New-PSSVSCodeWorkSpaceSession"
+    "PSSVsc"   = "New-PSSVSCodeWorkSpaceSession"
     "PSSWelcome" = "Invoke-PssWelcome"
 }
 Try {
