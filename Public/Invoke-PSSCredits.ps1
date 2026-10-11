@@ -51,7 +51,7 @@ function Invoke-PSSCredits {
     cls
 
     # Build, set up and write logo and texts
-    $LogoData = Get-Content $PSScriptRoot\PSS.Logo -Encoding UTF8
+    $LogoData = Get-Content $PSScriptRoot\Assets\PSS.Logo -Encoding UTF8
     $Logo = $LogoData | select -Skip 1
     $LogoIndents = ($LogoData | select -First 1) -split ","
 
@@ -114,7 +114,7 @@ function Invoke-PSSCredits {
         }
 
         # Build, set up and write splash texts
-        $Splashes = Get-Content $PSScriptRoot\splash.txt -Encoding UTF8
+        $Splashes = Get-Content $PSScriptRoot\Assets\splash.txt -Encoding UTF8
         $SplashTimer += 1
         if ($SplashTimer -ge (5..10 | get-random)) {
             $SplashIndex += 1
