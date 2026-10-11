@@ -6,7 +6,7 @@
         This function creates a new environment folder, optionally sets up custom module versions,
         and generates a VSCode settings file with the specified color customizations.
         It also checks for existing environment variables and creates them if they do not exist.
-    
+
     .PARAMETER Name
         The name of the environment to create.
 
@@ -25,7 +25,7 @@
     .EXAMPLE
         PS C:\> New-PSSEnvironment -Name "Development" -ColorCode "#FF0000" -UseCustomModuleVersions
         Creates a new "Development" environment with the specified color code. Custom module versions will also be set up if the switch is specified.
-    
+
     .EXAMPLE
         PS C:\> New-PSSEnvironment -Name "Development" -ColorCode "#FF0000" -TenantId "your-tenant-id" -Organisation "your-organisation"
         Creates a new "Development" environment with the specified color code, tenant ID, and organisation.
@@ -48,9 +48,9 @@ Function New-PSSEnvironment {
     Try {
         If (-not (Test-Path $FolderPath)) {
             New-Item -Path $FolderPath -ItemType Directory | Out-Null
-            Write-Host "Environment folder created at $FolderPath" -ForegroundColor Green
+            Write-Verbose "Environment folder created at $FolderPath"
         } else {
-            Write-Host "Environment folder already exists at $FolderPath" -ForegroundColor Yellow
+            Write-Warning "Environment folder already exists at $FolderPath"
         }
     }
     Catch {
@@ -69,10 +69,10 @@ Function New-PSSEnvironment {
     $CodeProfilePath = "$ENV:PSSEnvRoot\$Name\.vscode\"
     Try {
         If (-not (Test-Path $CodeProfilePath)) {
-            Write-Host "VSCode profile folder created at $CodeProfilePath" -ForegroundColor Green
+            Write-Verbose "VSCode profile folder created at $CodeProfilePath"
             New-Item -Path $CodeProfilePath -ItemType Directory | Out-Null
         }
-        
+
         $SettingsFilePath = "$ENV:PSSEnvRoot\$Name\.vscode\settings.json"
         If (-not (Test-Path $SettingsFilePath)) {
             $SettingsContent = @"
@@ -86,10 +86,10 @@ Function New-PSSEnvironment {
 }
 "@
         $SettingsContent | Out-File -FilePath $SettingsFilePath -Encoding UTF8
-        Write-Host "VSCode settings file created at $SettingsFilePath" -ForegroundColor Green
-        } 
+        Write-Verbose "VSCode settings file created at $SettingsFilePath"
+        }
         else {
-            Write-Host "VSCode settings file already exists at $SettingsFilePath" -ForegroundColor Yellow
+            Write-Warning "VSCode settings file already exists at $SettingsFilePath"
         }
     }
     Catch {
@@ -101,12 +101,12 @@ Function New-PSSEnvironment {
     If (-not (Test-Path -Path $EnvDataPath)) {
         Try {
             New-PSSEnvVariables -Environment $Name -TenantId $TenantId -Organisation $Organisation -UseCustomModuleVersions $UseCustomModuleVersions
-            Write-Host "Environment variables file created at $EnvDataPath" -ForegroundColor Green
+            Write-Verbose "Environment variables file created at $EnvDataPath"
         }
         Catch {
             Write-Warning "Failed to create environment variables file at $($EnvDataPath): $_"
         }
     } else {
-        Write-Host "Environment variables file already exists at $EnvDataPath" -ForegroundColor Yellow
+        Write-Warning "Environment variables file already exists at $EnvDataPath"
     }
 }

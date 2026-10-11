@@ -30,17 +30,17 @@ if ($null -eq $ENV:PSSEnvRoot) {
         $IsProfileSet = Get-Content -Path $PSConsoleProfile -ErrorAction SilentlyContinue
 
         if ($null -eq $IsProfileSet -or $IsProfileSet -notmatch "`$ENV:PSSEnvRoot") {
-            $PSSProfiles | Foreach {Add-Content -Path $_ -Value "`n# PS.Severance variable - Root path for PS.Severance environments`n`$ENV:PSSEnvRoot = `"$ENV:PSSEnvRoot`""}
+            $PSSProfiles | Foreach-Object {Add-Content -Path $_ -Value "`n# PS.Severance variable - Root path for PS.Severance environments`n`$ENV:PSSEnvRoot = `"$ENV:PSSEnvRoot`""}
             $Global:PSSFirstTimeRan = $true
         }
         if ($null -eq $IsProfileSet -or $IsProfileSet -notmatch "`$ENV:PSSConPrefix") {
-            $PSSProfiles | Foreach {Add-Content -Path $_ -Value "`n# PS.Severance variable - Prefix for PS.Severance console title`n`$ENV:PSSConPrefix = `"$ENV:PSSConPrefix`""}
+            $PSSProfiles | Foreach-Object {Add-Content -Path $_ -Value "`n# PS.Severance variable - Prefix for PS.Severance console title`n`$ENV:PSSConPrefix = `"$ENV:PSSConPrefix`""}
         }
         if ($null -eq $IsProfileSet -or $IsProfileSet -notmatch "`$ENV:PssWelcomeAscii") {
-            $PSSProfiles | Foreach {Add-Content -Path $_ -Value "`n# PS.Severance variable - Enable PS.Severance welcome ASCII art`n`$ENV:PSSWelcomeAscii = `$True"}
+            $PSSProfiles | Foreach-Object {Add-Content -Path $_ -Value "`n# PS.Severance variable - Enable PS.Severance welcome ASCII art`n`$ENV:PSSWelcomeAscii = `$True"}
         }
         if ($null -eq $IsProfileSet -or $IsProfileSet -notmatch "Import-Module PS.Severance") {
-            $PSSProfiles | Foreach {Add-Content -Path $_ -Value "`n# Import PS.Severance module. This ensures that all functions and aliases are always available at the start of your session.`nImport-Module PS.Severance"}
+            $PSSProfiles | Foreach-Object {Add-Content -Path $_ -Value "`n# Import PS.Severance module. This ensures that all functions and aliases are always available at the start of your session.`nImport-Module PS.Severance"}
         }
     }
     Catch {

@@ -16,11 +16,11 @@
     .EXAMPLE
         PS C:\> New-PSSConsole -Environment "Development"
         Opens a new Windows Terminal tab for the "Development" environment with the appropriate color and title.
-    
+
     .EXAMPLE
         PS C:\> PssCon Production
         Opens a new Windows Terminal tab for the "Production" environment with the appropriate color and title. This uses alias `PssCon` for the function.
-    
+
     .EXAMPLE
         PS C:\> New-PSSConsole
         Prompts the user for a console name and opens a new PowerShell console window with the specified name.
@@ -35,7 +35,7 @@ Function New-PSSConsole {
             $pswin = (Get-Host).UI.RawUI
             $pswinW = $pswin.WindowSize.Width
             $pswin.WindowTitle = $con
-            cls
+            Clear-Host
         }
         Catch {
             throw "Failed to open new PowerShell console window: $_"

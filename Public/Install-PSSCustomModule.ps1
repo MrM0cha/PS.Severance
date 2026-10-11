@@ -24,7 +24,7 @@
         PS C:\> Install-PSSCustomModule -Environment "Development" -Name "MyModule" -RequiredVersion "1.0.0"
         Installs version 1.0.0 of the "MyModule" module into the CustomModules directory of the "Development" environment.
 #>
-Function Install-PSSCustomModule { 
+Function Install-PSSCustomModule {
     Param (
         [Parameter(Mandatory = $true)]
         [string]$Environment,
@@ -49,7 +49,7 @@ Function Install-PSSCustomModule {
     # Download module from PSGallery
     Try {
         Find-Module -Name $Name -Repository PSGallery -RequiredVersion $RequiredVersion | Save-Module -Path $CustomModulePath
-        Write-Output "Module $Name (version $RequiredVersion) installed to $CustomModulePath"
+        Write-Verbose "Module $Name (version $RequiredVersion) installed to $CustomModulePath"
     }
     Catch {
         throw "Failed to install module $Name (version $RequiredVersion) to $($CustomModulePath): $_"

@@ -1,7 +1,7 @@
 <#
     .SYNOPSIS
         Creates environment variables for a specified environment.
-    
+
     .DESCRIPTION
         This function creates a JSON file containing environment variables for the specified environment.
         If the UseCustomModuleVersions switch is specified, it also creates a CustomModules folder within the environment directory.
@@ -19,7 +19,7 @@
 
     .PARAMETER UseCustomModuleVersions
         Switch indicating whether to set up custom module versions for the environment.
-    
+
     .EXAMPLE
         PS C:\> New-PSSEnvVariables -Environment "Development" -TenantId "your-tenant-id" -Organisation "your-organisation" -UseCustomModuleVersions
         Creates a new "Development" environment variables file with the specified tenant ID and organisation. Custom module versions will also be set up if the switch is specified.
@@ -49,7 +49,7 @@ Function New-PSSEnvVariables {
         if ($UseCustomModuleVersions) {
             New-Item -Path "$EnvPath\CustomModules" -ItemType Directory | Out-Null
         }
-        Write-Host "Environment variables file created at $EnvPath\Environment_Variables.json" -ForegroundColor Green
+        Write-Verbose "Environment variables file created at $EnvPath\Environment_Variables.json"
     }
     Catch {
         Write-Warning "Failed to create environment variables file at $($EnvPath)\Environment_Variables.json: $_"

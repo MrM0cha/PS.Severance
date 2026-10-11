@@ -12,7 +12,7 @@ Function Invoke-PSSGetStarted {
     $PSConsoleProfile = Join-Path -Path $PSSProfileRoot -ChildPath "Microsoft.PowerShell_profile.ps1"
     $VSCodeProfile = Join-Path -Path $PSSProfileRoot -ChildPath "Microsoft.VSCode_profile.ps1"
 
-    $WelcomeMessage = 
+    $WelcomeMessage =
         "Welcome to PS.Severance!",
         "`nRequired Global environment variables have been registered successfully for the first time.",
         "If you want to make changes to the environment variables, you can edit your PowerShell profile accordingly.",
@@ -33,16 +33,22 @@ Function Invoke-PSSGetStarted {
         "`nTo return to this guide at any time, run 'Invoke-PSSGetStarted' cmdlet.",
         "To roll the credits, run 'Invoke-PSSCredits' cmdlet.",
         "To uninstall PS.Severance, Simply run 'Uninstall-PSSeverance' cmdlet.`n"
-            
+
     $pswin = (Get-Host).UI.RawUI
     $pswinW = $pswin.WindowSize.Width
     $pswin.WindowTitle = "PS.S >_"
 
+    Clear-Host
+    $WelcomeReturn = New-Object System.Collections.ArrayList
+    $LogoReturn = New-Object System.Collections.ArrayList
     $ascii = "█▀▀▄ ▄▀▀▀   ▄▀▀▀     ▀▄","█▀▀   ▀▀▄    ▀▀▄      ▄▀","▀    ▀▀▀  ▀ ▀▀▀      ▀   ▀▀▀▀"
-    cls
     foreach ($line in $ascii) {
-        Write-Host (" "*(($pswinW/2)-15)) $line -ForegroundColor DarkGray
+        $LineOut = ((" "*(($pswinW/2)-15)) + $line)
+        [Void]$LogoReturn.Add($LineOut)
     }
-    1..4 | foreach {Write-Output ""}
-    $WelcomeMessage | Foreach-Object { Write-Host $_ -foregroundcolor Green }
+    1..4 | Foreach-Object { [Void]$WelcomeReturn.Add("") }
+    $WelcomeMessage | Foreach-Object { [Void]$WelcomeReturn.Add($_) }
+
+    $LogoReturn | ForEach-Object { Write-Host $_ -ForegroundColor DarkGray }
+    $WelcomeReturn | ForEach-Object { Write-Host $_ -ForegroundColor Green }
 }

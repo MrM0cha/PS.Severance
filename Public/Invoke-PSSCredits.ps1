@@ -40,7 +40,7 @@ function Invoke-PSSCredits {
     $pswin = (Get-Host).UI.RawUI
     $pswinW = ($pswin.WindowSize.Width)
     $pswinH = ($pswin.WindowSize.Height)-1
-    
+
     Foreach ($line in (1..$pswinH)) {
         New-Variable -Name ("Line"+$line) -Value ""
     }
@@ -48,16 +48,16 @@ function Invoke-PSSCredits {
         New-Variable -Name $line -Value 0
     }
 
-    cls
+    Clear-Host
 
     # Build, set up and write logo and texts
     $LogoData = Get-Content $PSScriptRoot\Assets\PSS.Logo -Encoding UTF8
-    $Logo = $LogoData | select -Skip 1
-    $LogoIndents = ($LogoData | select -First 1) -split ","
+    $Logo = $LogoData | Select-Object -Skip 1
+    $LogoIndents = ($LogoData | Select-Object -First 1) -split ","
 
     if ($LogoIndent -eq 0) {$PsWinIndent = (($pswinW/2)-25)}
     else {$PsWinIndent = $LogoIndent}
-    
+
     $DrawLogo = {
         foreach ($LogoLine in 0..(($LogoData).Count-2)) {
             $pswin.CursorPosition = New-Object System.Management.Automation.Host.Coordinates (($PsWinIndent)+$LogoIndents[$LogoLine]) , ((([math]::truncate($pswinH/2))-10)+($LogoLine+1))
@@ -67,7 +67,7 @@ function Invoke-PSSCredits {
     }
 
     invoke-command -ScriptBlock $DrawLogo
-    Write ""
+    Write-Output ""
     Write-Host -ForegroundColor Gray (" "*(($pswinW/2)-20)+"-----  Press any key to return  -----")
     $pswin.CursorPosition = New-Object System.Management.Automation.Host.Coordinates ((($pswinW/2)-20)) , (([math]::truncate($pswinH-1)))
     Write-Host -ForegroundColor Gray "PS.Severance - Teemu (Mokka) Kettunen"
@@ -77,11 +77,11 @@ function Invoke-PSSCredits {
         # Determine the total number of lines allowed at the same time
         if ($lines -lt 0 -or $lines -gt $pswinW -or $null -eq $lines) {$lines = 0.9}
         $MaxLines = (5..($pswinW*$lines)) | Get-Random
-        
+
         # Retrieving the number of current lines
         $LineCount = 0
         Foreach ($num in (1..$pswinW)) {
-            $NumQuery = (Get-Variable -Name $num).Value 
+            $NumQuery = (Get-Variable -Name $num).Value
             if ($NumQuery -ne 0) {$LineCount += 1}
         }
 
@@ -108,7 +108,7 @@ function Invoke-PSSCredits {
         Foreach ($num in (1..$pswinW)) {
             $NumVal = (Get-Variable -Name $num).Value
             if ($NumVal -ge 1) {
-                $NumChar = (97..122 | %{[char]$_}),(1..9) | Get-Random
+                $NumChar = (97..122 | Foreach-Object {[char]$_}),(1..9) | Get-Random
                 [string]$NewLine += $NumChar
             } Else {[string]$NewLine += " "}
         }
@@ -121,16 +121,15 @@ function Invoke-PSSCredits {
             $SelSplash = $Splashes[$SplashIndex]
             $RndPoint = 1..($pswinW-$SelSplash.Length) | Get-Random
 
-            $StrStart = ([char[]]$newline | select -First $RndPoint) -join ""
-            $StrEnd = ([char[]]$newline | select -Skip ($RndPoint+$SelSplash.Length)) -join ""
+            $StrStart = ([char[]]$newline | Select-Object -First $RndPoint) -join ""
+            $StrEnd = ([char[]]$newline | Select-Object -Skip ($RndPoint+$SelSplash.Length)) -join ""
 
             [string]$NewLine = ($StrStart,$SelSplash,$StrEnd) -join ""
 
             $SplashTimer = 0
             if ($SplashIndex -ge ($Splashes.Count - 1)) {$SplashIndex = -1}
-            
         }
-        
+
         # Scroll down the line row
         Foreach ($line in ($pswinH..2)) {
             Set-Variable -Name ("Line"+$line) -Value (Get-Variable -Name ("Line"+($line-1))).Value
@@ -154,7 +153,7 @@ function Invoke-PSSCredits {
                 # If button was pressed, clear console and escape the loop
                 $keyInfo = [Console]::ReadKey($true)
 
-                cls
+                Clear-Host
                 break
         }
         Start-Sleep -Milliseconds 100

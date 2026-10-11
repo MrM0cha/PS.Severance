@@ -24,7 +24,7 @@
 
     .PARAMETER UseCustomModuleVersions
         Indicates whether to use custom module versions for the environment.
-    
+
     .EXAMPLE
         PS C:\> Update-PSSEnvVariables -Environment "Development" -TenantId "new-tenant-id" -Organisation "new-org"
         Updates the environment variables for the "Development" environment with the specified TenantId and Organisation.
@@ -97,7 +97,7 @@ Function Update-PSSEnvVariables {
 
         # Save updated customer variables back to file
         $EnvData | ConvertTo-Json | Out-File -FilePath "$EnvPath\Environment_Variables.json" -Encoding UTF8
-    }   
+    }
     Catch {
         throw "Failed to update environment variables for environment $($Environment): $_"
     }

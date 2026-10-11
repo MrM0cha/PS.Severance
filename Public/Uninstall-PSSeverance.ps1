@@ -13,7 +13,7 @@ Function Uninstall-PSSeverance {
     $Confirmation = Read-Host "Are you sure you want to uninstall PS.Severance and remove related profile entries? (Y/N)"
     If ($Confirmation -eq "Y") {
     } Else {
-        Write-Host "Uninstallation cancelled." -ForegroundColor Yellow
+        Write-Warning "Uninstallation cancelled."
         Return
     }
 
@@ -42,14 +42,14 @@ Function Uninstall-PSSeverance {
         Foreach ($PSSProfile in $PSSProfiles) {
             If (Test-Path -Path $PSSProfile) {
                 $ProfileContent = Get-Content -Path $PSSProfile
-                $NewProfileContent = $ProfileContent | where {$_ -notmatch $PSSProfileMatch} | where {$_ -ne ""}
+                $NewProfileContent = $ProfileContent | Where-Object {$_ -notmatch $PSSProfileMatch} | Where-Object {$_ -ne ""}
 
                 Set-Content -Path $PSSProfile -Value $NewProfileContent
             }
         }
     }
 
-    Write-Host "PS.Severance has been uninstalled and profile entries removed." -ForegroundColor Green
-    Write-Host "No Environments have been removed. You may manually delete them from $ENV:PSSEnvRoot." -ForegroundColor Green
-    Write-Host "Remember to restart your PowerShell session for changes to take effect." -ForegroundColor Yellow
+    Write-Warning "PS.Severance has been uninstalled and profile entries removed."
+    Write-Warning "No Environments have been removed. You may manually delete them from $ENV:PSSEnvRoot."
+    Write-Warning "Remember to restart your PowerShell session for changes to take effect."
 }

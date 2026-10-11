@@ -26,7 +26,7 @@ Foreach($import in ($Private+$Public)) #@($Public + $Private)
 Try {
     $PSSLocation = ((Get-Location).Path -replace '\\',"/") -match ($env:PSSEnvRoot -replace '\\',"/")
     if ($PSSLocation) {
-        $PssConsoleTitle = ((Get-Location).Path -split "\\") | select -Last 1
+        $PssConsoleTitle = ((Get-Location).Path -split "\\") | Select-Object -Last 1
     }
     else {
         $PssConsoleTitle = ($PssConsoleTitle.ToString() -replace "$ENV:PSSConPrefix ")
@@ -78,7 +78,7 @@ Try {
         }
     }
     Elseif ($ENV:PssWelcomeAscii) {
-        Invoke-PssWelcome
+        Invoke-PSSWelcome
     }
 }
 Catch {

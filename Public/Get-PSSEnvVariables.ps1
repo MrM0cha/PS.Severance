@@ -39,7 +39,6 @@ Function Get-PSSEnvVariables {
         }
         Catch {
             Write-Warning "Failed to set environment variable '$key': $_"
-            
         }
     }
 }
