@@ -55,7 +55,7 @@ function Invoke-PSSVisual {
     $Logo = $LogoData | Select-Object -Skip 1
     $LogoIndents = ($LogoData | Select-Object -First 1) -split ","
 
-    if ($LogoIndent -eq 0) {$PsWinIndent = (($pswinW/2)-25)}
+    if ($LogoIndent -eq 0) {$PsWinIndent = (($pswinW/2)-30)}
     else {$PsWinIndent = $LogoIndent}
 
     $DrawLogo = {

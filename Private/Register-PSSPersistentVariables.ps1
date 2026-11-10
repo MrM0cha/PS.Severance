@@ -31,7 +31,7 @@ if ($null -eq $ENV:PSSEnvRoot) {
 
         if ($null -eq $IsProfileSet -or $IsProfileSet -notmatch "`$ENV:PSSEnvRoot") {
             $PSSProfiles | Foreach-Object {Add-Content -Path $_ -Value "`n# PS.Severance variable - Root path for PS.Severance environments`n`$ENV:PSSEnvRoot = `"$ENV:PSSEnvRoot`""}
-            $Global:PSSFirstTimeRan = $true
+            $Script:PSSFirstTimeRan = $true
         }
         if ($null -eq $IsProfileSet -or $IsProfileSet -notmatch "`$ENV:PSSConPrefix") {
             $PSSProfiles | Foreach-Object {Add-Content -Path $_ -Value "`n# PS.Severance variable - Prefix for PS.Severance console title`n`$ENV:PSSConPrefix = `"$ENV:PSSConPrefix`""}
