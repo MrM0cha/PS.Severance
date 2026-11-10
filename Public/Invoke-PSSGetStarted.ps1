@@ -1,4 +1,4 @@
-<#
+﻿<#
     .SYNOPSIS
         Displays a welcome message and getting started guide for PS.Severance.
     .DESCRIPTION
@@ -23,7 +23,7 @@ Function Invoke-PSSGetStarted {
         "`nHere's how to get started with PS.Severance:",
         "0. Use 'Get-Help <cmdlet>' to explore available cmdlets and their usage.",
         "1. Create a new environment using the 'New-PSSEnvironment' cmdlet.",
-        "2. Add more environment variables as needed using the 'Update-PSSEnvVariables' cmdlet.",
+        "2. Add more environment variables as needed using the 'Update-PSSEnvVariable' cmdlet.",
         "3. Install any custom modules for the environment as needed using 'Install-PSSCustomModule' cmdlet.",
         "4. Connect to the new environment's console using 'New-PSSConsole' (Alias: PssCon) cmdlet.",
         "5. Connect to the new environment's VSCode workspace using 'New-PSSVSCode' (Alias: PssVSCode) cmdlet.",
@@ -31,7 +31,7 @@ Function Invoke-PSSGetStarted {
         "`nEvery Environment you create will have its own isolated set of variables, command history, and configurations.",
         "If you plan to use CustomModules process, you can fully isolate module versions for each environment.",
         "`nTo return to this guide at any time, run 'Invoke-PSSGetStarted' cmdlet.",
-        "To roll the credits, run 'Invoke-PSSCredits' cmdlet.",
+        "To roll the visual credits, run 'Invoke-PSSVisual' cmdlet.",
         "To uninstall PS.Severance, Simply run 'Uninstall-PSSeverance' cmdlet.`n"
 
     $pswin = (Get-Host).UI.RawUI
@@ -49,6 +49,6 @@ Function Invoke-PSSGetStarted {
     1..4 | Foreach-Object { [Void]$WelcomeReturn.Add("") }
     $WelcomeMessage | Foreach-Object { [Void]$WelcomeReturn.Add($_) }
 
-    $LogoReturn | ForEach-Object { Write-Host $_ -ForegroundColor DarkGray }
-    $WelcomeReturn | ForEach-Object { Write-Host $_ -ForegroundColor Green }
+    $LogoReturn | ForEach-Object { Write-PSSConsole $_ -ForegroundColor DarkGray }
+    $WelcomeReturn | ForEach-Object { Write-PSSConsole $_ -ForegroundColor Green }
 }

@@ -21,9 +21,9 @@
     Specifies the indentation of the logo.
 
     .EXAMPLE
-    Invoke-PSSCredits -Lines 10 -LineLength 5 -CodeColor Blue -LogoColor White -LogoIndent 0
+    Invoke-PSSVisual -Lines 10 -LineLength 5 -CodeColor Blue -LogoColor White -LogoIndent 0
 #>
-function Invoke-PSSCredits {
+function Invoke-PSSVisual {
     param (
         $Lines,
         $LineLength,
@@ -62,15 +62,15 @@ function Invoke-PSSCredits {
         foreach ($LogoLine in 0..(($LogoData).Count-2)) {
             $pswin.CursorPosition = New-Object System.Management.Automation.Host.Coordinates (($PsWinIndent)+$LogoIndents[$LogoLine]) , ((([math]::truncate($pswinH/2))-10)+($LogoLine+1))
 
-            Write-Host -ForegroundColor $LogoColor $Logo[$LogoLine]
+            Write-PSSConsole -ForegroundColor $LogoColor $Logo[$LogoLine]
         }
     }
 
     invoke-command -ScriptBlock $DrawLogo
     Write-Output ""
-    Write-Host -ForegroundColor Gray (" "*(($pswinW/2)-20)+"-----  Press any key to return  -----")
+    Write-PSSConsole -ForegroundColor Gray (" "*(($pswinW/2)-20)+"-----  Press any key to return  -----")
     $pswin.CursorPosition = New-Object System.Management.Automation.Host.Coordinates ((($pswinW/2)-20)) , (([math]::truncate($pswinH-1)))
-    Write-Host -ForegroundColor Gray "PS.Severance - Teemu (Mokka) Kettunen"
+    Write-PSSConsole -ForegroundColor Gray "PS.Severance - Teemu (Mokka) Kettunen"
 
     While ($true) {
 
@@ -135,6 +135,7 @@ function Invoke-PSSCredits {
             Set-Variable -Name ("Line"+$line) -Value (Get-Variable -Name ("Line"+($line-1))).Value
         }
         $line1 = $NewLine
+        [void]$line1
 
         # Write all the line rows at once with all the splash texts
         $pswin.CursorPosition = New-Object System.Management.Automation.Host.Coordinates 0 , 0
@@ -143,7 +144,7 @@ function Invoke-PSSCredits {
             if ($null -ne $screen) {$screen = $screen+"`n"+(Get-Variable -Name ("Line"+$line)).Value}
             else {$screen =(Get-Variable -Name ("Line"+$line)).Value}
         }
-        Write-Host -ForegroundColor $CodeColor $screen
+        Write-PSSConsole -ForegroundColor $CodeColor $screen
 
         # Build, set up and write logo
         invoke-command -ScriptBlock $DrawLogo
@@ -151,11 +152,11 @@ function Invoke-PSSCredits {
         # Check if any buttons have been pressed
         if ([Console]::KeyAvailable){
                 # If button was pressed, clear console and escape the loop
-                $keyInfo = [Console]::ReadKey($true)
+                [Console]::ReadKey($true) | Out-Null
 
                 Clear-Host
                 break
         }
-        Start-Sleep -Milliseconds 100
+        Start-Sleep -Milliseconds 60
     }
 }

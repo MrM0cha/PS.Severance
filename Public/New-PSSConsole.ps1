@@ -26,16 +26,18 @@
         Prompts the user for a console name and opens a new PowerShell console window with the specified name.
 #>
 Function New-PSSConsole {
+    [cmdletbinding(supportsshouldprocess=$true)]
     Param (
         $Environment
     )
     if (!$Environment) {
         Try {
             $con = Read-Host "Console Name"
-            $pswin = (Get-Host).UI.RawUI
-            $pswinW = $pswin.WindowSize.Width
-            $pswin.WindowTitle = $con
-            Clear-Host
+            if ($PSCmdlet.ShouldProcess($con, 'Set console title and clear the console')) {
+                $pswin = (Get-Host).UI.RawUI
+                $pswin.WindowTitle = $con
+                Clear-Host
+            }
         }
         Catch {
             throw "Failed to open new PowerShell console window: $_"
@@ -43,8 +45,11 @@ Function New-PSSConsole {
     }
     else {
         Try {
+            Write-Verbose "Opening new Windows Terminal tab for environment $Environment"
             $ConsoleColor = (Get-Content "$ENV:PSSEnvRoot\$Environment\.vscode\settings.json" | ConvertFrom-Json).'workbench.colorCustomizations'.'titleBar.activeBackground'
-            wt -w 0 --tabColor $ConsoleColor --title "$($ENV:PSSConPrefix)$($Environment)"
+            if ($PSCmdlet.ShouldProcess($Environment, 'Open a new Windows Terminal tab')) {
+                wt -w 0 --tabColor $ConsoleColor --title "$($ENV:PSSConPrefix)$($Environment)"
+            }
         }
         Catch {
             throw "Failed to open new Windows Terminal tab for environment $($Environment): $_"

@@ -31,6 +31,7 @@
         Creates a new "Development" environment with the specified color code, tenant ID, and organisation.
 #>
 Function New-PSSEnvironment {
+    [cmdletbinding(supportsshouldprocess=$true)]
     Param (
         [Parameter(Mandatory = $true)]
         [string]$Name,
@@ -100,7 +101,7 @@ Function New-PSSEnvironment {
     $EnvDataPath = "$FolderPath\Environment_Variables.json"
     If (-not (Test-Path -Path $EnvDataPath)) {
         Try {
-            New-PSSEnvVariables -Environment $Name -TenantId $TenantId -Organisation $Organisation -UseCustomModuleVersions $UseCustomModuleVersions
+            New-PSSEnvVariable -Environment $Name -TenantId $TenantId -Organisation $Organisation -UseCustomModuleVersions $UseCustomModuleVersions
             Write-Verbose "Environment variables file created at $EnvDataPath"
         }
         Catch {

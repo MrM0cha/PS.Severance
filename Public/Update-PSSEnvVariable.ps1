@@ -26,18 +26,19 @@
         Indicates whether to use custom module versions for the environment.
 
     .EXAMPLE
-        PS C:\> Update-PSSEnvVariables -Environment "Development" -TenantId "new-tenant-id" -Organisation "new-org"
+        PS C:\> Update-PSSEnvVariable -Environment "Development" -TenantId "new-tenant-id" -Organisation "new-org"
         Updates the environment variables for the "Development" environment with the specified TenantId and Organisation.
 
     .EXAMPLE
-        PS C:\> Update-PSSEnvVariables -Environment "Development" -CustomVariableName "MyVar" -CustomVariableValue "MyValue"
+        PS C:\> Update-PSSEnvVariable -Environment "Development" -CustomVariableName "MyVar" -CustomVariableValue "MyValue"
         Updates the environment variables for the "Development" environment with the specified custom variable and value.
 
     .EXAMPLE
-        PS C:\> Update-PSSEnvVariables -Environment "Development" -UseCustomModuleVersions $true
+        PS C:\> Update-PSSEnvVariable -Environment "Development" -UseCustomModuleVersions $true
         Updates the environment variables for the "Development" environment to use custom module versions.
 #>
-Function Update-PSSEnvVariables {
+Function Update-PSSEnvVariable {
+    [cmdletbinding(supportsshouldprocess=$true)]
     Param (
         [Parameter(Mandatory = $true)]
         [string]$Environment,

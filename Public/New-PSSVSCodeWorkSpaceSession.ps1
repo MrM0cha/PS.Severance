@@ -28,14 +28,16 @@
         Opens the Visual Studio Code workspace for the "Production" environment. This uses alias `PssVsc` for the function.
 #>
 Function New-PSSVSCodeWorkSpaceSession {
+    [cmdletbinding(supportsshouldprocess=$true)]
     Param (
         [Parameter(Mandatory = $true)]
         [string]$Environment
     )
-
     Try {
         $WorkspacePath = "$ENV:PSSEnvRoot\$Environment"
-        CODE $WorkspacePath
+        if ($PSCmdlet.ShouldProcess($WorkspacePath, 'Open Visual Studio Code workspace')) {
+            CODE $WorkspacePath
+        }
     }
     Catch {
         Write-Warning "Failed to open Visual Studio Code workspace for environment $($Environment): $_"

@@ -13,10 +13,10 @@
         Accepts a string representing the environment name.
 
     .EXAMPLE
-        PS C:\> Get-PSSEnvVariables -Environment "Development"
+        PS C:\> Get-PSSEnvVariable -Environment "Development"
         Loads and sets the environment variables for the "Development" environment.
 #>
-Function Get-PSSEnvVariables {
+Function Get-PSSEnvVariable {
     Param (
         [Parameter(Mandatory = $true)]
         [string]$Environment

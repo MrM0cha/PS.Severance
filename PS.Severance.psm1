@@ -37,10 +37,10 @@ Catch {
 }
 
 $CmdletAliasMatrix = @{
-    "UPSSEV" = "Update-PSSEnvVariables"
-    "GPSSEV" = "Get-PSSEnvVariables"
+    "UPSSEV" = "Update-PSSEnvVariable"
+    "GPSSEV" = "Get-PSSEnvVariable"
     "PSSCon"    = "New-PSSConsole"
-    "NPSSEV" = "New-PSSEnvVariables"
+    "NPSSEV" = "New-PSSEnvVariable"
     "PSSVsc"   = "New-PSSVSCodeWorkSpaceSession"
     "PSSWelcome" = "Invoke-PssWelcome"
 }
@@ -62,7 +62,7 @@ Catch {
 
 Try {
     if ($PssConsoleTitle -notmatch "PowerShell|pwsh") {
-        Get-PSSEnvVariables -Environment $PssConsoleTitle -ErrorAction SilentlyContinue
+        Get-PSSEnvVariable -Environment $PssConsoleTitle -ErrorAction SilentlyContinue
         if ((Get-Location).Path -ne "$ENV:PSSEnvRoot\$PssConsoleTitle") { Set-Location "$ENV:PSSEnvRoot\$PssConsoleTitle" -ErrorAction SilentlyContinue }
         Set-PSReadLineOption -HistorySavePath .\CommandHistory.txt -ErrorAction SilentlyContinue
 

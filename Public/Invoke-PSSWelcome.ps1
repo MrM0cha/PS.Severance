@@ -1,4 +1,4 @@
-<#
+﻿<#
     .SYNOPSIS
         Displays the PS.Severance welcome message with ASCII art.
 
@@ -33,5 +33,6 @@ Function Invoke-PssWelcome {
         throw "Failed to display PS.Severance welcome message: $_"
     }
 
-    $WelcomeReturn | ForEach-Object { Write-Host $_ -ForegroundColor DarkGray }
+    # $WelcomeReturn | ForEach-Object { Write-Host $_ -ForegroundColor DarkGray }
+    $WelcomeReturn | ForEach-Object { Write-PSSConsole $_ -ForegroundColor DarkGray}
 }

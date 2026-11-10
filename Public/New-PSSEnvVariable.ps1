@@ -21,11 +21,12 @@
         Switch indicating whether to set up custom module versions for the environment.
 
     .EXAMPLE
-        PS C:\> New-PSSEnvVariables -Environment "Development" -TenantId "your-tenant-id" -Organisation "your-organisation" -UseCustomModuleVersions
+        PS C:\> New-PSSEnvVariable -Environment "Development" -TenantId "your-tenant-id" -Organisation "your-organisation" -UseCustomModuleVersions
         Creates a new "Development" environment variables file with the specified tenant ID and organisation. Custom module versions will also be set up if the switch is specified.
 
 #>
-Function New-PSSEnvVariables {
+Function New-PSSEnvVariable {
+    [cmdletbinding(supportsshouldprocess=$true)]
     Param (
         [Parameter(Mandatory = $true)]
         [string]$Environment,

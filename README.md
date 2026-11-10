@@ -225,9 +225,15 @@ Other approved extensions:
 | New-PSSEnvironment | Create a new severed environment |
 | New-PSSConsole | Open an environment-specific PowerShell console |
 | New-PSSVSCodeWorkSpaceSession | Open an environment workspace in VS Code |
+| New-PSSEnvVariable | Build new variables for specified environment |
 | Install-PSSCustomModule | Install environment-specific module versions |
 | Invoke-PSSGetStarted | Display onboarding guide |
-| Invoke-PSSCredits | Display PS.Severance credits experience |
+| Invoke-PSSWelcome | Display welcome message for current session |
+| Invoke-PSSVisual | Display PS.Severance credits as a visual experience |
+| Get-PSSEnvironment | List Environments and their properties |
+| Get-PSSEnvVariable | Set environment's variables for current session |
+| Remove-PSSEnvironment | Removes specified environment and data |
+| Update-PSSEnvVariable | Update specified environment's set variable |
 | Uninstall-PSSeverance | Remove PS.Severance and profile configuration |
  
  
@@ -239,9 +245,9 @@ Other approved extensions:
 |---------|---------|
 | PssCon | New-PSSConsole |
 | PssVsc | New-PSSVSCodeWorkSpaceSession |
-| GPSSEV | Get-PSSEnvVariables |
-| UPSSEV | Update-PSSEnvVariables |
-| NPSSEV | New-PSSEnvVariables |
+| GPSSEV | Get-PSSEnvVariable |
+| UPSSEV | Update-PSSEnvVariable |
+| NPSSEV | New-PSSEnvVariable |
 | PSSWelcome | Invoke-PssWelcome |
  
  
