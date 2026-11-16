@@ -1,27 +1,32 @@
 <#
     .SYNOPSIS
-    Displays the credits for the PS.Severance module.
+        Displays the credits for the PS.Severance module.
 
     .DESCRIPTION
-    This function shows the logo and splash texts for the PS.Severance module, along with the author's information.
+        This function shows the logo and splash texts for the PS.Severance module, along with the author's information.
 
     .PARAMETER Lines
-    Specifies the number of lines to display at the same time.
+        Specifies the number of lines to display at the same time.
 
     .PARAMETER LineLength
-    Specifies the length of each line.
+        Specifies the length of each line.
 
     .PARAMETER CodeColor
-    Specifies the color of the code text.
+        Specifies the color of the code text.
 
     .PARAMETER LogoColor
-    Specifies the color of the logo.
+        Specifies the color of the logo.
 
     .PARAMETER LogoIndent
-    Specifies the indentation of the logo.
+        Specifies the indentation of the logo.
 
     .EXAMPLE
-    Invoke-PSSVisual -Lines 10 -LineLength 5 -CodeColor Blue -LogoColor White -LogoIndent 0
+        Invoke-PSSVisual
+        Runs the visual credits for the PS.Severance module with default settings.
+
+    .EXAMPLE
+        Invoke-PSSVisual -Lines 10 -LineLength 5 -CodeColor Blue -LogoColor White -LogoIndent 0
+        Runs the visual credits for the PS.Severance module with specified settings.
 #>
 function Invoke-PSSVisual {
     param (

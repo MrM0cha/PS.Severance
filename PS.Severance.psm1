@@ -37,12 +37,17 @@ Catch {
 }
 
 $CmdletAliasMatrix = @{
+    "GPSSEnv" = "Get-PSSEnvironment"
     "UPSSEV" = "Update-PSSEnvVariable"
-    "GPSSEV" = "Get-PSSEnvVariable"
+    "IPSSEV" = "Import-PSSEnvVariable"
+    "IPSSCM" = "Install-PSSCustomModule"
+    "NPSSEnv" = "New-PSSEnvironment"
+    "RPSSEnv" = "Remove-PSSEnvironment"
     "PSSCon"    = "New-PSSConsole"
-    "NPSSEV" = "New-PSSEnvVariable"
     "PSSVsc"   = "New-PSSVSCodeWorkSpaceSession"
     "PSSWelcome" = "Invoke-PssWelcome"
+    "PSSVisual" = "Invoke-PSSVisual"
+    "PSSGetStarted" = "Invoke-PSSGetStarted"
 }
 Try {
     Foreach ($PublicFunction in $Public.Basename) {
@@ -62,7 +67,7 @@ Catch {
 
 Try {
     if ($PssConsoleTitle -notmatch "PowerShell|pwsh") {
-        Get-PSSEnvVariable -Environment $PssConsoleTitle -ErrorAction SilentlyContinue
+        Import-PSSEnvVariable -Environment $PssConsoleTitle -ErrorAction SilentlyContinue
         if ((Get-Location).Path -ne "$ENV:PSSEnvRoot\$PssConsoleTitle") { Set-Location "$ENV:PSSEnvRoot\$PssConsoleTitle" -ErrorAction SilentlyContinue }
         Set-PSReadLineOption -HistorySavePath .\CommandHistory.txt -ErrorAction SilentlyContinue
 

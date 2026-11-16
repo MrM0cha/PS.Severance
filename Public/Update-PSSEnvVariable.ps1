@@ -4,7 +4,7 @@
 
     .DESCRIPTION
         This function updates the environment variables stored in the Environment_Variables.json file
-        for the specified environment. It allows updating the TenantId, Organisation, custom variables,
+        for the specified environment. It allows updating the TenantId, Organization, custom variables,
         and custom module versions.
 
     .PARAMETER Environment
@@ -13,8 +13,8 @@
     .PARAMETER TenantId
         The new TenantId value to set for the environment.
 
-    .PARAMETER Organisation
-        The new Organisation value to set for the environment.
+    .PARAMETER Organization
+        The new Organization value to set for the environment.
 
     .PARAMETER CustomVariableName
         The name of the custom variable to update.
@@ -26,8 +26,8 @@
         Indicates whether to use custom module versions for the environment.
 
     .EXAMPLE
-        PS C:\> Update-PSSEnvVariable -Environment "Development" -TenantId "new-tenant-id" -Organisation "new-org"
-        Updates the environment variables for the "Development" environment with the specified TenantId and Organisation.
+        PS C:\> Update-PSSEnvVariable -Environment "Development" -TenantId "new-tenant-id" -Organization "new-org"
+        Updates the environment variables for the "Development" environment with the specified TenantId and Organization.
 
     .EXAMPLE
         PS C:\> Update-PSSEnvVariable -Environment "Development" -CustomVariableName "MyVar" -CustomVariableValue "MyValue"
@@ -43,22 +43,34 @@ Function Update-PSSEnvVariable {
         [Parameter(Mandatory = $true)]
         [string]$Environment,
         [Parameter(Mandatory = $false)]
-        $TenantId,
+        [string]$ColorCode,
         [Parameter(Mandatory = $false)]
-        $Organisation,
+        [string]$TenantId,
         [Parameter(Mandatory = $false)]
-        $CustomVariableName,
+        [string]$Organization,
         [Parameter(Mandatory = $false)]
-        $CustomVariableValue,
+        [string]$CustomVariableName,
         [Parameter(Mandatory = $false)]
-        $UseCustomModuleVersions
+        [string]$CustomVariableValue,
+        [Parameter(Mandatory = $false)]
+        [switch]$UseCustomModuleVersions
     )
 
     $EnvPath = "$ENV:PSSEnvRoot\$Environment"
 
     # Load existing customer variables
     Try {
-        $EnvData = Get-Content -Path "$EnvPath\Environment_Variables.json" | ConvertFrom-Json
+        if (-not (Test-Path -LiteralPath $EnvPath)) {
+            Throw "Environment path not found for environment $($Environment)."
+        }
+        If (-not (Test-Path -LiteralPath "$EnvPath\Environment_Variables.json")) {
+            Write-Debug "Environment variables file not found for environment $($Environment). Creating a new one."
+            $NoFiles = $true
+            $EnvData = @{}
+        }
+        Else {
+            $EnvData = Get-Content -Path "$EnvPath\Environment_Variables.json" | ConvertFrom-Json
+        }
     }
     Catch {
         throw "Failed to load environment variables for environment $($Environment): $_"
@@ -66,6 +78,13 @@ Function Update-PSSEnvVariable {
 
     # Update variables if new values are provided
     Try {
+        if ($ColorCode) {
+            if ($EnvData.PSObject.Properties['ColorCode']) {
+                $EnvData.ColorCode = $ColorCode
+            } else {
+                $EnvData | Add-Member -MemberType NoteProperty -Name ColorCode -Value $ColorCode
+            }
+        }
         if ($TenantId) {
             if ($EnvData.TenantId) {
                 $EnvData.TenantId = $TenantId
@@ -73,11 +92,11 @@ Function Update-PSSEnvVariable {
                     $EnvData | Add-Member -MemberType NoteProperty -Name TenantId -Value $TenantId
             }
         }
-        if ($Organisation) {
-            if ($EnvData.Organisation) {
-                $EnvData.Organisation = "$("$Organisation" -replace '.onmicrosoft.com').onmicrosoft.com"
+        if ($Organization) {
+            if ($EnvData.Organization) {
+                $EnvData.Organization = "$("$Organization" -replace '.onmicrosoft.com').onmicrosoft.com"
             } else {
-                    $EnvData | Add-Member -MemberType NoteProperty -Name Organisation -Value "$("$Organisation" -replace '.onmicrosoft.com').onmicrosoft.com"
+                    $EnvData | Add-Member -MemberType NoteProperty -Name Organization -Value "$("$Organization" -replace '.onmicrosoft.com').onmicrosoft.com"
             }
         }
         if ($CustomVariableName -and $CustomVariableValue) {
@@ -88,14 +107,31 @@ Function Update-PSSEnvVariable {
             }
         }
         if ($UseCustomModuleVersions) {
-            if ($EnvData.PSObject.Properties['CustomModuleVersions']) {
-                $EnvData.CustomModuleVersions = $UseCustomModuleVersions
+            if ($EnvData.PSObject.Properties['UseCustomModuleVersions']) {
+                $EnvData.UseCustomModuleVersions = "true"
             } else {
-                $EnvData | Add-Member -MemberType NoteProperty -Name CustomModuleVersions -Value $UseCustomModuleVersions
-                New-Item -Path "$EnvPath\CustomModules" -ItemType Directory | Out-Null
+                $EnvData | Add-Member -MemberType NoteProperty -Name UseCustomModuleVersions -Value "true"
+                if (-not (Test-Path "$EnvPath\CustomModules")) {
+                    New-Item -Path "$EnvPath\CustomModules" -ItemType Directory | Out-Null
+                }
+            }
+        }
+        elseif ($UseCustomModuleVersions -eq $false) {
+            if ($EnvData.PSObject.Properties['UseCustomModuleVersions']) {
+                $EnvData.UseCustomModuleVersions = "false"
+            } else {
+                $EnvData | Add-Member -MemberType NoteProperty -Name UseCustomModuleVersions -Value "false"
             }
         }
 
+        If ($NoFiles) {
+            If ($colorCode) {
+                New-PSSEnvironment -Name $Environment -ColorCode $ColorCode -InitializeOnly
+            }
+            Else {
+                New-PSSEnvironment -Name $Environment -InitializeOnly
+            }
+        }
         # Save updated customer variables back to file
         $EnvData | ConvertTo-Json | Out-File -FilePath "$EnvPath\Environment_Variables.json" -Encoding UTF8
     }

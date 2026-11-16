@@ -54,4 +54,16 @@ Function Install-PSSCustomModule {
     Catch {
         throw "Failed to install module $Name (version $RequiredVersion) to $($CustomModulePath): $_"
     }
+
+    # Check if "UseCustomModules" is set for the environment
+    $UseCustomModules = Get-Content "$EnvPath\EnvironmentSettings\UseCustomModules.txt" -ErrorAction SilentlyContinue
+    if (-not $UseCustomModules) {
+        # Set UseCustomModules to true for the environment
+        Try {
+            Update-PSSEnvVariable -Environment $Environment -UseCustomModuleVersions $true
+        }
+        Catch {
+            throw "Failed to update environment variable UseCustomModuleVersions for environment $($Environment): $_"
+        }
+    }
 }

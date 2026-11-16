@@ -12,13 +12,19 @@
 
     .EXAMPLE
         Get-PSSEnvironment -Environment "Dev"
-
         Retrieves information about the "Dev" environment.
 
     .EXAMPLE
         Get-PSSEnvironment
-
         Retrieves information about all environments.
+
+    .EXAMPLE
+        (Get-PSSEnvironment -Environment "Prod").Variables
+        Retrieves the environment variables for the "Prod" environment.
+
+    .EXAMPLE
+        (Get-PSSEnvironment).Variables
+        Retrieves the environment variables for all environments.
 #>
 Function Get-PSSEnvironment {
     Param (
@@ -29,13 +35,14 @@ Function Get-PSSEnvironment {
     if ($Environment) {
         # Logic to get the environment by name
         $EnvPath = "$ENV:PSSEnvRoot\$Environment"
+        $EnvName = $Environment
 
         $Environment = Get-Item -Path $EnvPath -ErrorAction SilentlyContinue
         if ($Environment) {
             $EnvVariables = Get-Content -Path "$EnvPath\Environment_Variables.json"
 
             $EnvData = [pscustomobject]@{
-                Name = $Environment
+                Name = $EnvName
                 Path = $EnvPath
                 Variables = $EnvVariables | ConvertFrom-Json
             }
@@ -51,9 +58,10 @@ Function Get-PSSEnvironment {
         $EnvDataList = New-Object System.Collections.ArrayList
         foreach ($Env in $Environments) {
             $EnvPath = $Env.FullName
+            $EnvName = $Env.Name
             $EnvVariables = Get-Content -Path "$EnvPath\Environment_Variables.json" -ErrorAction SilentlyContinue
             $EnvData = [pscustomobject]@{
-                Name = $Env.Name
+                Name = $EnvName
                 Path = $EnvPath
                 Variables = $EnvVariables | ConvertFrom-Json
             }

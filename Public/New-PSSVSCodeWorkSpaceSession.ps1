@@ -19,6 +19,7 @@
 
     .PARAMETER Environment
         The name of the environment.
+
     .EXAMPLE
         PS C:\> New-PSSVSCodeWorkSpaceSession -Environment "Development"
         Opens the Visual Studio Code workspace for the "Development" environment.

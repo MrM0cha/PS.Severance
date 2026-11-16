@@ -9,12 +9,12 @@
 $pssEnvironmentCommands = @(
     'New-PSSConsole',
     'New-PSSVSCodeWorkSpaceSession',
-    'New-PSSEnvironmentVariables',
-    'Update-PSSEnvironmentVariables',
-    'Get-PSSEnvironmentVariables',
+    'Update-PSSEnvVariable',
+    'Import-PSSEnvVariable',
     'Install-PSSCustomModule',
     'Get-PSSEnvironment',
-    'Remove-PSSEnvironment'
+    'Remove-PSSEnvironment',
+    'Remove-PSSEnvVariable'
 )
 
 Register-ArgumentCompleter -CommandName $pssEnvironmentCommands -ParameterName 'Environment' -ScriptBlock {

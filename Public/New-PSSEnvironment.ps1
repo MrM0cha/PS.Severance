@@ -16,19 +16,26 @@
     .PARAMETER TenantId
         The tenant ID associated with the environment.
 
-    .PARAMETER Organisation
-        The organisation associated with the environment. No need to specify tenant suffix. It will be automatically appended if required.
+    .PARAMETER Organization
+        The organization associated with the environment. No need to specify tenant suffix. It will be automatically appended if required.
 
     .PARAMETER UseCustomModuleVersions
         Switch indicating whether to set up custom module versions for the environment.
+
+    .PARAMETER InitializeOnly
+        Switch indicating whether to only initialize the environment without updating environment variables.
 
     .EXAMPLE
         PS C:\> New-PSSEnvironment -Name "Development" -ColorCode "#FF0000" -UseCustomModuleVersions
         Creates a new "Development" environment with the specified color code. Custom module versions will also be set up if the switch is specified.
 
     .EXAMPLE
-        PS C:\> New-PSSEnvironment -Name "Development" -ColorCode "#FF0000" -TenantId "your-tenant-id" -Organisation "your-organisation"
-        Creates a new "Development" environment with the specified color code, tenant ID, and organisation.
+        PS C:\> New-PSSEnvironment -Name "Development" -ColorCode "#FF0000" -TenantId "your-tenant-id" -Organization "your-organization"
+        Creates a new "Development" environment with the specified color code, tenant ID, and organization.
+
+    .EXAMPLE
+        PS C:\> New-PSSEnvironment -Name "Development" -InitializeOnly
+        Initializes the "Development" environment without updating environment variables.
 #>
 Function New-PSSEnvironment {
     [cmdletbinding(supportsshouldprocess=$true)]
@@ -40,9 +47,12 @@ Function New-PSSEnvironment {
         [Parameter(Mandatory = $false)]
         [string]$TenantId,
         [Parameter(Mandatory = $false)]
-        [string]$Organisation,
+        [string]$Organization,
         [Parameter(Mandatory = $false)]
-        [switch]$UseCustomModuleVersions
+        [switch]$UseCustomModuleVersions,
+        [Parameter(Mandatory = $false)]
+        [switch]$InitializeOnly
+
     )
 
     $FolderPath = "$ENV:PSSEnvRoot\$Name"
@@ -51,7 +61,7 @@ Function New-PSSEnvironment {
             New-Item -Path $FolderPath -ItemType Directory | Out-Null
             Write-Verbose "Environment folder created at $FolderPath"
         } else {
-            Write-Warning "Environment folder already exists at $FolderPath"
+            Write-Debug "Environment folder already exists at $FolderPath"
         }
     }
     Catch {
@@ -60,7 +70,9 @@ Function New-PSSEnvironment {
 
     if ($UseCustomModuleVersions) {
         Try {
-            New-Item -Path "$FolderPath\CustomModules" -ItemType Directory | Out-Null
+            if (-not (Test-Path "$FolderPath\CustomModules")) {
+                New-Item -Path "$FolderPath\CustomModules" -ItemType Directory | Out-Null
+            }
         }
         Catch {
             Write-Warning "Failed to create CustomModules folder at $($FolderPath): $_"
@@ -90,7 +102,7 @@ Function New-PSSEnvironment {
         Write-Verbose "VSCode settings file created at $SettingsFilePath"
         }
         else {
-            Write-Warning "VSCode settings file already exists at $SettingsFilePath"
+            Write-Debug "VSCode settings file already exists at $SettingsFilePath"
         }
     }
     Catch {
@@ -101,13 +113,18 @@ Function New-PSSEnvironment {
     $EnvDataPath = "$FolderPath\Environment_Variables.json"
     If (-not (Test-Path -Path $EnvDataPath)) {
         Try {
-            New-PSSEnvVariable -Environment $Name -TenantId $TenantId -Organisation $Organisation -UseCustomModuleVersions $UseCustomModuleVersions
-            Write-Verbose "Environment variables file created at $EnvDataPath"
+            # Update Environment Variables only if not initializing only and not in what-if mode
+            if (!$InitializeOnly) {
+                if ($PSCmdlet.ShouldProcess("Update environment variables for $Name")) {
+                    Update-PSSEnvVariable -ColorCode $ColorCode -Environment $Name -TenantId $TenantId -Organization $Organization -UseCustomModuleVersions:$UseCustomModuleVersions
+                }
+                Write-Verbose "Environment variables file created at $EnvDataPath"
+            }
         }
         Catch {
             Write-Warning "Failed to create environment variables file at $($EnvDataPath): $_"
         }
     } else {
-        Write-Warning "Environment variables file already exists at $EnvDataPath"
+        Write-Debug "Environment variables file already exists at $EnvDataPath"
     }
 }

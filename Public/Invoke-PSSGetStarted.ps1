@@ -1,6 +1,7 @@
 ﻿<#
     .SYNOPSIS
         Displays a welcome message and getting started guide for PS.Severance.
+
     .DESCRIPTION
         This function provides a friendly introduction to PS.Severance, including information about registered environment variables,
         PowerShell profiles, and step-by-step instructions for getting started with the module.
@@ -13,26 +14,24 @@ Function Invoke-PSSGetStarted {
     $VSCodeProfile = Join-Path -Path $PSSProfileRoot -ChildPath "Microsoft.VSCode_profile.ps1"
 
     $WelcomeMessage =
-        "Welcome to PS.Severance!",
-        "`nRequired Global environment variables have been registered successfully for the first time.",
-        "If you want to make changes to the environment variables, you can edit your PowerShell profile accordingly.",
-        "Profiles:",
+        "## Welcome to PS.Severance! ##",
+        "`nPS.Severance is initialized. You're ready to start creating isolated PowerShell environments.",
+        "`nYour PowerShell and VS Code profiles:",
         "- $PSConsoleProfile",
         "- $VSCodeProfile",
-        "You may need to restart your PowerShell session for the changes to take effect.",
-        "`nHere's how to get started with PS.Severance:",
-        "0. Use 'Get-Help <cmdlet>' to explore available cmdlets and their usage.",
-        "1. Create a new environment using the 'New-PSSEnvironment' cmdlet.",
-        "2. Add more environment variables as needed using the 'Update-PSSEnvVariable' cmdlet.",
-        "3. Install any custom modules for the environment as needed using 'Install-PSSCustomModule' cmdlet.",
-        "4. Connect to the new environment's console using 'New-PSSConsole' (Alias: PssCon) cmdlet.",
-        "5. Connect to the new environment's VSCode workspace using 'New-PSSVSCode' (Alias: PssVSCode) cmdlet.",
-        "6. Enjoy managing your Severed PowerShell environments with PS.Severance.",
-        "`nEvery Environment you create will have its own isolated set of variables, command history, and configurations.",
-        "If you plan to use CustomModules process, you can fully isolate module versions for each environment.",
-        "`nTo return to this guide at any time, run 'Invoke-PSSGetStarted' cmdlet.",
-        "To roll the visual credits, run 'Invoke-PSSVisual' cmdlet.",
-        "To uninstall PS.Severance, Simply run 'Uninstall-PSSeverance' cmdlet.`n"
+        "`nUse these profiles to configure environment variables and other session settings.",
+        "Restart the corresponding PowerShell session after making changes.",
+        "`nStart severing:",
+        "0. Explore commands with 'Get-Help <cmdlet> -Full'.",
+        "1. Create an environment with 'New-PSSEnvironment'.",
+        "2. Add or update environment variables with 'Update-PSSEnvVariable'.",
+        "3. Add isolated modules with 'Install-PSSCustomModule'.",
+        "4. Enter the environment in a PowerShell console with 'New-PSSConsole' (Alias: PSSCon).",
+        "5. Open the environment in VS Code with 'New-PSSVSCodeWorkSpaceSession' (Alias: PSSVsc).",
+        "`nEvery environment is severed from the others, with its own variables, command history, configuration, and optionally its own module versions.",
+        "`nNeed this guide again? Run 'Invoke-PSSGetStarted'.",
+        "Want the credits? Run 'Invoke-PSSVisual'.",
+        "Want to uninstall PS.Severance? Run 'Uninstall-PSSeverance'.`n"
 
     $pswin = (Get-Host).UI.RawUI
     $pswinW = $pswin.WindowSize.Width

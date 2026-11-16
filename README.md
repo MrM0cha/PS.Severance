@@ -63,8 +63,9 @@ The environment's root folder becomes the VS Code workspace, allowing customer-s
 | Requirement | Version |
 |------------|----------|
 | PowerShell | 7.5 or later |
+| PSReadLine | Any (required module) |
  
-PS.Severance is built as a PowerShell module targeting modern PowerShell editions. 【1-96ad2d】
+PS.Severance is built as a PowerShell module targeting modern PowerShell editions.
  
 ---
  
@@ -115,7 +116,7 @@ These settings are written to both standard PowerShell and VS Code PowerShell pr
  
 ```powershell
 New-PSSEnvironment `
-    -Name Production`
+    -Name Production `
     -ColorCode "#00B894"
 ```
  
@@ -126,7 +127,7 @@ New-PSSEnvironment `
     -Name Production `
     -ColorCode "#FF5555" `
     -TenantId "xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx" `
-    -Organisation "contoso"
+    -Organization "contoso"
 ```
  
 This creates:
@@ -174,6 +175,29 @@ VS Code opens directly to the selected environment workspace.
  
 ---
  
+## Manage Environment Variables
+ 
+Each environment stores its variables in `Environment_Variables.json`. Manage them with:
+ 
+```powershell
+# Add or update variables (built-in or custom)
+Update-PSSEnvVariable -Environment Production -TenantId "xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx"
+Update-PSSEnvVariable -Environment Production -CustomVariableName "ApiUrl" -CustomVariableValue "https://api.contoso.com"
+ 
+# Load the environment's variables into the current session (global scope)
+Import-PSSEnvVariable -Environment Production
+ 
+# Remove a variable from the environment
+Remove-PSSEnvVariable -Environment Production -VariableName "ApiUrl"
+ 
+# Inspect an environment and its variables
+(Get-PSSEnvironment -Environment Production).Variables
+```
+ 
+Variables are automatically imported when a severed console or workspace session starts.
+ 
+---
+ 
 # Custom Module Version Management
  
 One of the most powerful PS.Severance features is environment-specific module versioning.
@@ -216,42 +240,45 @@ Other approved extensions:
 - Rainbow CSV
 - vscode-pdf
  
----
+PS.Severance can install VS Code, the required extension, and the PowerShell profile entries for you:
  
-# Built-In Commands
+```powershell
+Install-PSSDependency -Part All
+```
  
-| Command | Purpose |
-|----------|----------|
-| New-PSSEnvironment | Create a new severed environment |
-| New-PSSConsole | Open an environment-specific PowerShell console |
-| New-PSSVSCodeWorkSpaceSession | Open an environment workspace in VS Code |
-| New-PSSEnvVariable | Build new variables for specified environment |
-| Install-PSSCustomModule | Install environment-specific module versions |
-| Invoke-PSSGetStarted | Display onboarding guide |
-| Invoke-PSSWelcome | Display welcome message for current session |
-| Invoke-PSSVisual | Display PS.Severance credits as a visual experience |
-| Get-PSSEnvironment | List Environments and their properties |
-| Get-PSSEnvVariable | Set environment's variables for current session |
-| Remove-PSSEnvironment | Removes specified environment and data |
-| Update-PSSEnvVariable | Update specified environment's set variable |
-| Uninstall-PSSeverance | Remove PS.Severance and profile configuration |
+Or install individual parts:
  
+```powershell
+Install-PSSDependency -Part VSCode, VSCodeExtensions
+Install-PSSDependency -Part PowerShellProfile
+```
  
 ---
  
-# Aliases
+# Public Commands
  
-| Alias | Command |
-|---------|---------|
-| PssCon | New-PSSConsole |
-| PssVsc | New-PSSVSCodeWorkSpaceSession |
-| GPSSEV | Get-PSSEnvVariable |
-| UPSSEV | Update-PSSEnvVariable |
-| NPSSEV | New-PSSEnvVariable |
-| PSSWelcome | Invoke-PssWelcome |
+| Command | Alias | Purpose |
+|----------|--------|----------|
+| `New-PSSEnvironment` | `NPSSEnv` | Create a new severed environment (name, colour, tenant ID, organization, optional custom module versions) |
+| `Get-PSSEnvironment` | `GPSSEnv` | List all environments, or one environment, with their paths and variables |
+| `Remove-PSSEnvironment` | `RPSSEnv` | Remove an environment folder and all of its data |
+| `New-PSSConsole` | `PSSCon` | Open an environment-specific Windows Terminal tab with its colour and title |
+| `New-PSSVSCodeWorkSpaceSession` | `PSSVsc` | Open an environment's root folder as a VS Code workspace |
+| `Update-PSSEnvVariable` | `UPSSEV` | Add or update an environment's variables (ColorCode, TenantId, Organization, custom variables, custom module usage) |
+| `Import-PSSEnvVariable` | `IPSSEV` | Load an environment's variables into the current session's global scope |
+| `Remove-PSSEnvVariable` | — | Remove a variable from an environment's configuration |
+| `Install-PSSCustomModule` | `IPSSCM` | Install a specific module version into an environment's CustomModules folder |
+| `Install-PSSDependency` | — | Install supporting components: VS Code, VS Code extensions, and/or PowerShell profile entries |
+| `Invoke-PSSGetStarted` | `PSSGetStarted` | Display the onboarding / getting started guide |
+| `Invoke-PSSWelcome` | `PSSWelcome` | Display the PS.Severance welcome message with ASCII art |
+| `Invoke-PSSVisual` | `PSSVisual` | Display PS.Severance credits as a visual experience |
+| `Uninstall-PSSeverance` | — | Remove PS.Severance and its profile configuration (environments are preserved) |
+ 
+Use `Get-Help <command> -Full` for detailed parameter documentation and examples.
  
  
 ---
+ 
  
 # Getting Started Guide
  
